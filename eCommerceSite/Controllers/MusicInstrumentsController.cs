@@ -21,12 +21,12 @@ namespace eCommerceSite.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(MusicInstrument newMusIns) 
+        public async Task<ActionResult> Create(MusicInstrument newMusIns) 
         {
             if (ModelState.IsValid) 
             {
                 _context.MusicInstruments.Add(newMusIns); //Prepares insert
-                _context.SaveChanges(); // Executes pending insert
+                await _context.SaveChangesAsync();        // Executes pending insert
 
                 ViewData["Message"] = $"{newMusIns.Title} was added successfully!";
 
