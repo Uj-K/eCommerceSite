@@ -1,6 +1,14 @@
+using eCommerceSite.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddDbContext<MusicInstrumentContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefualtConnection")));
+
+builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
