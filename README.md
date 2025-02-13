@@ -2,8 +2,8 @@
 This is a simple eCommerce web application developed as part of the CPW 219 .NET Web Programming class
 
 ## Prerequisites
-- [Visual Studio](https://visualstudio.microsoft.com/)
-- [.NET](https://dotnet.microsoft.com/en-us/download)
+- [Visual Studio 2022](https://visualstudio.microsoft.com/)
+- [.NET 8.0](https://dotnet.microsoft.com/en-us/download)
 
 ## Useful resources 
 - [Bootstrap](https://getbootstrap.com/)
