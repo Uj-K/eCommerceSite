@@ -1,4 +1,5 @@
-﻿using eCommerceSite.Models;
+﻿using eCommerceSite.Data;
+using eCommerceSite.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Drawing.Text;
 
@@ -6,11 +7,11 @@ namespace eCommerceSite.Controllers
 {
     public class MusicInstrumentsController : Controller
     {
-        private readonly MusicInstrumentContext
+        private readonly MusicInstrumentContext _context;
 
-        public MusicInstrumentsController()
+        public MusicInstrumentsController(MusicInstrumentContext context)
         {
-                
+            _context = context;
         }
 
         [HttpGet]
@@ -24,8 +25,11 @@ namespace eCommerceSite.Controllers
         {
             if (ModelState.IsValid) 
             {
-                // Add to DB
-                // success message
+                _context.MusicInstruments.Add(newMusIns); //Prepares insert
+                _context.SaveChanges(); // Executes pending insert
+
+                ViewData["Message"] = $"{newMusIns.Title} was added successfully!";
+
                 return View();
             }
 
