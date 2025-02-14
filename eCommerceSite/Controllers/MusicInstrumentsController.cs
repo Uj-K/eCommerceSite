@@ -75,7 +75,7 @@ namespace eCommerceSite.Controllers
             {
                 _context.MusicInstruments.Update(instModel);
                 await _context.SaveChangesAsync();
-                /*ViewData["Message"] = $"{instModel.Title} was successfully edit!";*/
+                TempData["Message"] = $"{instModel.Title} was updated successfully!"; // VeiwData는 redirect하면 데이터가 사라짐
                 return RedirectToAction("Index");
 
             }
