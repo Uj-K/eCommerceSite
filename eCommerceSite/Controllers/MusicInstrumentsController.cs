@@ -50,5 +50,19 @@ namespace eCommerceSite.Controllers
             return View(newMusIns);
 
         }
+
+        public async Task<IActionResult> Edit(int id) 
+        {
+            MusicInstrument instToEdit = await _context.MusicInstruments.FindAsync(id);
+
+            if (instToEdit == null) 
+            { 
+                return NotFound();
+            }
+
+            return View(instToEdit);
+        }
+        /* async는 비동기 코드는 작업을 실행하고 기다리는 동안 다른 작업을 수행할 수 있는 코드
+         * 추가할때 async, Task<>, await 세개가 세트 인듯 */
     }
 }
