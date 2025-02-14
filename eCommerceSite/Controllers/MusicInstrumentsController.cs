@@ -1,6 +1,7 @@
 ﻿using eCommerceSite.Data;
 using eCommerceSite.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using System.Drawing.Text;
 
@@ -49,6 +50,36 @@ namespace eCommerceSite.Controllers
 
             return View(newMusIns);
 
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id) 
+        {
+            MusicInstrument instToEdit = await _context.MusicInstruments.FindAsync(id);
+
+            if (instToEdit == null) 
+            { 
+                return NotFound();
+            }
+
+            return View(instToEdit);
+        }
+        /* async는 비동기 코드는 작업을 실행하고 기다리는 동안 다른 작업을 수행할 수 있는 코드
+         * 추가할때 async, Task<>, await 세개가 세트 인듯 */
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(MusicInstrument instModel)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.MusicInstruments.Update(instModel);
+                await _context.SaveChangesAsync();
+                TempData["Message"] = $"{instModel.Title} was updated successfully!"; // VeiwData는 redirect하면 데이터가 사라짐
+                return RedirectToAction("Index");
+
+            }
+            return View(instModel);
         }
     }
 }
