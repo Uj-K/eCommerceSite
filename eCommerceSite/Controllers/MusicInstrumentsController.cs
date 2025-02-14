@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using System.Drawing.Text;
+using System.Security.Policy;
 
 namespace eCommerceSite.Controllers
 {
@@ -81,5 +82,35 @@ namespace eCommerceSite.Controllers
             }
             return View(instModel);
         }
+
+        public async Task<IActionResult> Delete(int id)
+        {
+            MusicInstrument instToDelete = await _context.MusicInstruments.FindAsync(id);
+
+            if (instToDelete == null) 
+            { 
+                return NotFound();
+            }
+            return View(instToDelete);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        public async Task<IActionResult> DeleteConfirmed(int id) 
+        {
+            MusicInstrument instToDelete = await _context.MusicInstruments.FindAsync(id);
+
+            if (instToDelete != null)
+            {
+                _context.MusicInstruments.Remove(instToDelete);
+                await _context.SaveChangesAsync();
+                TempData["Message"] = $"{instToDelete.Title} was deleted successfully!";
+                return RedirectToAction("Index");
+            }
+
+            TempData["Message"] = "This game was already deleted";
+            return RedirectToAction("index");
+
+        }
+
     }
 }
