@@ -112,5 +112,15 @@ namespace eCommerceSite.Controllers
 
         }
 
+        public async Task<IActionResult> Details(int id)
+        {
+            MusicInstrument instToDetail = await _context.MusicInstruments.FindAsync(id);
+            if (instToDetail == null)
+            {
+                return NotFound();
+            }
+            return View(instToDetail);
+        }
+
     }
 }
