@@ -30,11 +30,13 @@ namespace eCommerceSite.Models
 
         [Required]
         [StringLength(75, MinimumLength = 8)]
+        [DataType(DataType.Password)]
         public string Password { get; set; }
 
         [Required]
         [Compare(nameof(Password))]
         [Display(Name = "Confirm Password")]
+        [DataType(DataType.Password)] // 비밀번호 그 똥글똥글하게 바꿔주는 기능
         public string ConfimedPassword { get; set; }
     }
 }
