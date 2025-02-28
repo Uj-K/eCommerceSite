@@ -41,9 +41,11 @@ namespace eCommerceSite.Models
         public string ConfimedPassword { get; set; }
     }
 
+    // C# 에는 한 파일에 여러 class 가 있을수 있다.
     public class LoginViewModel  // 그러니까 얘는 데이터 베이스 들어가거나 그런게 아니고 view! 보여지는 기능, input 을 collect 하는애니까 view model 이라고  
     {
         [Required]
+        [EmailAddress]
         public string Email { get; set; } = null!; //  = null!; 구문은 C#의 null-forgiving 연산자(!)를 사용하여 컴파일러 경고를 피하기 위한 것입니다.
         /*이 구문은 다음과 같은 상황에서 유용합니다:
         •	속성이 반드시 초기화되어야 하지만, 생성자나 다른 초기화 메서드에서 초기화될 것임을 보장할 때.
