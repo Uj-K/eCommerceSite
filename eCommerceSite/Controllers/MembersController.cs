@@ -33,10 +33,57 @@ namespace eCommerceSite.Controllers
 
                 _context.Members.Add(newMember);
                 await _context.SaveChangesAsync();
+
+                LogUserIn(newMember.Email);
+
                 return RedirectToAction("Index", "Home");
 
             }
             return View(regModel);
+        }
+
+        [HttpGet]
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Login(LoginViewModel loginModel)
+        {
+            if (ModelState.IsValid)
+            {
+                // Check DB for credentials
+                Member? m = (from memebr in _context.Members
+                             where memebr.Email == loginModel.Email &&
+                                   memebr.Password == loginModel.Password
+                             select memebr).SingleOrDefault(); // 하나만 있어야 되니까
+
+                // If exists, send to homepage
+                if (m != null)
+                {
+                    LogUserIn(loginModel.Email);
+                    return RedirectToAction("Index", "Home");
+                }
+
+                ModelState.AddModelError(string.Empty, "Credentials not found!");
+
+            }
+            // Return page if no record found, or ModelState is invalid
+            return View(loginModel);
+        }
+
+        private void LogUserIn(string email)
+        {
+            HttpContext.Session.SetString("Email", email);
+        }
+
+        [HttpGet]
+
+        public IActionResult Logout() 
+        { 
+            HttpContext.Session.Clear();
+            return RedirectToAction("Index", "Home");
         }
     }
 }

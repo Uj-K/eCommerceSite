@@ -19,6 +19,13 @@ namespace eCommerceSite.Controllers
 
         public async Task<IActionResult> Index()
         {
+            /* 로그인 한 사람만 접근 가능하게 하려면 이렇게 하면 됨
+             * if (HttpContext.Session.GetString("Email") == null)
+            {
+                return RedirectToAction("Login", "Members");
+            }
+            근데 더 나은 방법 있다고 함. 다음학기에 배운다고 함*/
+
             // Get all data from the DB
             List<MusicInstrument> musicInstruments = await _context.MusicInstruments.ToListAsync();
 
