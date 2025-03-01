@@ -33,6 +33,9 @@ namespace eCommerceSite.Controllers
 
                 _context.Members.Add(newMember);
                 await _context.SaveChangesAsync();
+
+                LogUserIn(newMember.Email);
+
                 return RedirectToAction("Index", "Home");
 
             }
@@ -52,14 +55,14 @@ namespace eCommerceSite.Controllers
             {
                 // Check DB for credentials
                 Member? m = (from memebr in _context.Members
-                           where memebr.Email == loginModel.Email &&
-                                 memebr.Password == loginModel.Password
-                                 select memebr).SingleOrDefault(); // 하나만 있어야 되니까
+                             where memebr.Email == loginModel.Email &&
+                                   memebr.Password == loginModel.Password
+                             select memebr).SingleOrDefault(); // 하나만 있어야 되니까
 
                 // If exists, send to homepage
-                if (m != null) 
+                if (m != null)
                 {
-                    HttpContext.Session.SetString("Email", loginModel.Email);
+                    LogUserIn(loginModel.Email);
                     return RedirectToAction("Index", "Home");
                 }
 
@@ -68,6 +71,19 @@ namespace eCommerceSite.Controllers
             }
             // Return page if no record found, or ModelState is invalid
             return View(loginModel);
+        }
+
+        private void LogUserIn(string email)
+        {
+            HttpContext.Session.SetString("Email", email);
+        }
+
+        [HttpGet]
+
+        public IActionResult Logout() 
+        { 
+            HttpContext.Session.Clear();
+            return RedirectToAction("Index", "Home");
         }
     }
 }
