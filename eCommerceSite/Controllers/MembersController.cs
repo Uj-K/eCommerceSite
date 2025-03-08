@@ -1,6 +1,7 @@
 ﻿using eCommerceSite.Data;
 using eCommerceSite.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
 namespace eCommerceSite.Controllers
@@ -24,6 +25,16 @@ namespace eCommerceSite.Controllers
         {
             if (ModelState.IsValid)
             {
+                // Check if email is already in use
+                if (await (from member in _context.Members
+                          where member.Email == regModel.Email
+                          select member).AnyAsync())
+                {
+                    // Add error message that will display next to the email field
+                    ModelState.AddModelError(nameof(RegisterViewModel.Email), "Email is already in use!");
+                    return View(regModel);
+                }
+
                 // Map RegisterViewModel to Member object
                 Member newMember = new()
                 {
