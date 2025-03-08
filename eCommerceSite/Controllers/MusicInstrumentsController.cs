@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using System.Drawing.Text;
+using System.Linq;
 using System.Security.Policy;
 
 namespace eCommerceSite.Controllers
@@ -17,7 +18,7 @@ namespace eCommerceSite.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? id)
         {
             /* 로그인 한 사람만 접근 가능하게 하려면 이렇게 하면 됨
              * if (HttpContext.Session.GetString("Email") == null)
@@ -26,17 +27,48 @@ namespace eCommerceSite.Controllers
             }
             근데 더 나은 방법 있다고 함. 다음학기에 배운다고 함*/
 
+            const int NumProductsToDispalyPerpage = 3;
+            const int PageOffset = 1; // Need a page offset to use current page and figure out.
+
+            int currPage = id ?? 1; // Coalescing operator. Set currPage to id if it has a maxNumpages, otherwise set it to 1
+            /* https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/null-coalescing-operator
+            // int currPage = id.HasValue ? id.Value : 1; 이거 보다 더 짧게도 가능
+            //         boolean condition ? 이다음 True면 일어나는 일 : false 면 일어나는 일 
+            // 밑에 이거 이렇게 위처럼 한줄로 쓸수있음
+            // if (id.HasValue)
+            // {
+            //      currPage = id.Value;
+            // }
+            // else
+            // {
+            //      currPage = 1;
+            // }
+            */
+
+            int totalNumOfProducts = await _context.MusicInstruments.CountAsync();
+            double maxNumpages = Math.Ceiling((double)totalNumOfProducts / NumProductsToDispalyPerpage); // 저 ceiling이 올림해준다.
+            int lastPage = Convert.ToInt32(maxNumpages); // Rounding pages up, to next whole page number
+
+
             // Get all data from the DB
-            List<MusicInstrument> musicInstruments = await _context.MusicInstruments.ToListAsync();
+            /*(이렇게 쓸수도 있다)    
+            List<MusicInstrument> musicInstruments = await _context.MusicInstruments
+                                                    .Skip(NumProductsToDispalyPerpage * (currPage - PageOffset))
+                                                    .Take(NumProductsToDispalyPerpage).ToListAsync();
+            */
 
-            /*List<MusicInstrument> musicInstruments = (from musicInstruments in _context.MusicInstruments
-             *(이렇게 쓸수도 있다)                        select musicInstruments).ToListAsync*/
+            List<MusicInstrument> musicInstruments = await (from musicInstrument in _context.MusicInstruments
+                                                            select musicInstrument)
+                                                            .Skip(NumProductsToDispalyPerpage * (currPage - PageOffset))
+                                                            .Take(NumProductsToDispalyPerpage)
+                                                            .ToListAsync();
 
+            CatalogViewModel catalogModel = new(musicInstruments, lastPage, currPage);
             // show them on the page
-            return View(musicInstruments);
+            return View(catalogModel);
         }
 
-
+        
         [HttpGet]
         public IActionResult Create()
         {
