@@ -30,7 +30,7 @@ namespace eCommerceSite.Controllers
             const int NumProductsToDispalyPerpage = 3;
             const int PageOffset = 1; // Need a page offset to use current page and figure out.
 
-            int currPage = id ?? 1; // Coalescing operator. Set currPage to id if it has a value, otherwise set it to 1
+            int currPage = id ?? 1; // Coalescing operator. Set currPage to id if it has a maxNumpages, otherwise set it to 1
             /* https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/null-coalescing-operator
             // int currPage = id.HasValue ? id.Value : 1; 이거 보다 더 짧게도 가능
             //         boolean condition ? 이다음 True면 일어나는 일 : false 면 일어나는 일 
@@ -45,6 +45,11 @@ namespace eCommerceSite.Controllers
             // }
             */
 
+            int totalNumOfProducts = await _context.MusicInstruments.CountAsync();
+            double maxNumpages = Math.Ceiling((double)totalNumOfProducts / NumProductsToDispalyPerpage); // 저 ceiling이 올림해준다.
+            int lastPage = Convert.ToInt32(maxNumpages); // Rounding pages up, to next whole page number
+
+
             // Get all data from the DB
             /*(이렇게 쓸수도 있다)    
             List<MusicInstrument> musicInstruments = await _context.MusicInstruments
@@ -58,8 +63,9 @@ namespace eCommerceSite.Controllers
                                                             .Take(NumProductsToDispalyPerpage)
                                                             .ToListAsync();
 
+            CatalogViewModel catalogModel = new(musicInstruments, lastPage, currPage);
             // show them on the page
-            return View(musicInstruments);
+            return View(catalogModel);
         }
 
         
