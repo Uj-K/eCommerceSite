@@ -47,7 +47,7 @@ namespace eCommerceSite.Controllers
 
                 LogUserIn(newMember.Email);
 
-                return RedirectToAction("Add", "Home");
+                return RedirectToAction("Index", "Home");
 
             }
             return View(regModel);
@@ -74,7 +74,7 @@ namespace eCommerceSite.Controllers
                 if (m != null)
                 {
                     LogUserIn(loginModel.Email);
-                    return RedirectToAction("Add", "Home");
+                    return RedirectToAction("Index", "Home");
                 }
 
                 ModelState.AddModelError(string.Empty, "Credentials not found!");
@@ -94,7 +94,7 @@ namespace eCommerceSite.Controllers
         public IActionResult Logout() 
         { 
             HttpContext.Session.Clear();
-            return RedirectToAction("Add", "Home");
+            return RedirectToAction("Index", "Home");
         }
     }
 }

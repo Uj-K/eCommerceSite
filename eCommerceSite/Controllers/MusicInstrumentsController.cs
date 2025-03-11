@@ -116,7 +116,7 @@ namespace eCommerceSite.Controllers
                 _context.MusicInstruments.Update(instModel);
                 await _context.SaveChangesAsync();
                 TempData["Message"] = $"{instModel.Title} was updated successfully!"; // VeiwData는 redirect하면 데이터가 사라짐
-                return RedirectToAction("Register");
+                return RedirectToAction("Index");
 
             }
             return View(instModel);
@@ -143,7 +143,7 @@ namespace eCommerceSite.Controllers
                 _context.MusicInstruments.Remove(instToDelete);
                 await _context.SaveChangesAsync();
                 TempData["Message"] = $"{instToDelete.Title} was deleted successfully!";
-                return RedirectToAction("Register");
+                return RedirectToAction("Index");
             }
 
             TempData["Message"] = "This game was already deleted";
