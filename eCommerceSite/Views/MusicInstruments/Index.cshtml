@@ -53,6 +53,7 @@
                         @* @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) old style 위에가 new sytle *@
                         <a class="btn btn-warning" asp-action="Details" asp-route-id="@item.InstrumentID">Details</a>
                         <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.InstrumentID">Delete</a>
+                        <a class="btn btn-success" asp-controller="Cart" asp-action="Add" asp-route-id="@item.InstrumentID">Add to Cart</a>
                     </td>
                 </tr>
             }
