@@ -25,4 +25,16 @@ namespace eCommerceSite.Models
         [Range(0, 10000)]
         public double Price { get; set; }
     }
+
+    /// <summary>
+    /// A single product that has been added to the users shopping cart cookie
+    /// </summary>
+    public class CartProductViewModel 
+    {
+        public int InstrumentID { get; set; }
+
+        public string Title { get; set; }
+
+        public double Price { get; set; }
+    }
 }
